@@ -296,7 +296,7 @@ export async function POST(request: Request) {
           // Extract factors
           for (const factorName of Object.keys(productConfig)) {
             if (row[factorName] !== undefined && row[factorName] !== null && row[factorName] !== '') {
-              const factorConfig = productConfig[factorName];
+              const factorConfig = (productConfig as Record<string, any>)[factorName];
               const rawValue = row[factorName];
               
               // Handle boolean type
@@ -420,7 +420,7 @@ export async function POST(request: Request) {
       
       for (const factorName of Object.keys(productConfig)) {
         if (row[factorName] !== undefined && row[factorName] !== null && row[factorName] !== '') {
-          const factorConfig = productConfig[factorName];
+          const factorConfig = (productConfig as Record<string, any>)[factorName];
           const rawValue = row[factorName];
           
           // Handle boolean type
