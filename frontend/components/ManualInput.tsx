@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import SingleScoreCard from './SingleScoreCard';
-import { API_URL } from '@/lib/api';
+import { getApiUrl } from '@/lib/api';
 
 interface FactorConfig {
   label: string;
@@ -71,7 +71,7 @@ export default function ManualInput() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
       
-      fetch(`${API_URL}/api/product-factors/${selectedProduct}`, {
+      fetch(getApiUrl(`/api/product-factors/${selectedProduct}`), {
         signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export default function ManualInput() {
             if (isLocalhost) {
               errorMessage += 'Lokales Backend starten: `uvicorn main:app --reload`';
             } else {
-              errorMessage += 'Bitte prüfen Sie NEXT_PUBLIC_API_URL in Vercel Environment Variables. Aktuell: ' + API_URL;
+              errorMessage += 'Bitte prüfen Sie, ob die API Routes funktionieren.';
             }
           }
           
@@ -153,7 +153,7 @@ export default function ManualInput() {
     setError(null);
 
     try {
-      const response = await fetch(`${API_URL}/score/manual`, {
+      const response = await fetch(getApiUrl('/api/score/manual'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

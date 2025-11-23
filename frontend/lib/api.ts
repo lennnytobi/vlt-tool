@@ -1,24 +1,41 @@
 /**
  * API Configuration
  * 
- * Verwendung der Environment Variable für Production-Deployments
- * Lokale Entwicklung: http://localhost:8000
- * Production: Wird über NEXT_PUBLIC_API_URL gesetzt
+ * Verwendet Next.js API Routes (integriert im Frontend)
+ * Kein separates Backend mehr nötig!
  * 
- * WICHTIG für Vercel Deployment:
- * - In Vercel Dashboard → Settings → Environment Variables
- * - Key: NEXT_PUBLIC_API_URL
- * - Value: Ihre Backend-URL (z.B. https://vlt-tool-production.up.railway.app)
+ * Falls ein externes Backend verwendet werden soll:
+ * - Setzen Sie NEXT_PUBLIC_API_URL in Environment Variables
+ * - Dann wird das externe Backend verwendet statt der API Routes
  */
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Wenn NEXT_PUBLIC_API_URL gesetzt ist, verwende externes Backend
+// Sonst verwende lokale Next.js API Routes
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
-// Warnung in der Konsole, wenn API_URL nicht gesetzt ist (nur im Browser)
-if (typeof window !== 'undefined' && API_URL === 'http://localhost:8000') {
-  console.warn(
-    '⚠️ API_URL nicht konfiguriert! Verwende localhost:8000.\n' +
-    'Für Production: Setzen Sie NEXT_PUBLIC_API_URL in Vercel Environment Variables.'
-  );
+// Im Browser: Verwende relative URLs für API Routes
+// Im Server: Verwende absolute URL oder leer für relative
+export function getApiUrl(endpoint: string): string {
+  if (typeof window !== 'undefined') {
+    // Browser: Verwende relative URL (Next.js API Routes)
+    if (!API_URL) {
+      return endpoint;
+    }
+    // Externes Backend ist konfiguriert
+    return `${API_URL}${endpoint}`;
+  }
+  
+  // Server-Side: Verwende absolute URL oder relative
+  if (API_URL) {
+    return `${API_URL}${endpoint}`;
+  }
+  
+  // Fallback für Server-Side Rendering
+  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : 'http://localhost:3000';
+  
+  return `${baseUrl}${endpoint}`;
 }
 
 /**

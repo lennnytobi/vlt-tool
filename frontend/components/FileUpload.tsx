@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import ScoreDisplay from './ScoreDisplay';
-import { API_URL } from '@/lib/api';
+import { getApiUrl } from '@/lib/api';
 
 interface ScoreResult {
   location_id: number;
@@ -56,7 +56,7 @@ export default function FileUpload() {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${API_URL}/score/csv`, {
+      const response = await fetch(getApiUrl('/api/score/csv'), {
         method: 'POST',
         body: formData,
       });
@@ -197,7 +197,7 @@ export default function FileUpload() {
             </div>
             <div className="ml-4 flex flex-col gap-2">
               <a
-                href={`${API_URL}/template/csv`}
+                href={getApiUrl('/api/template/csv')}
                 download="standort_template.csv"
                 className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors flex items-center space-x-2 whitespace-nowrap"
               >
@@ -207,8 +207,8 @@ export default function FileUpload() {
                 <span>CSV</span>
               </a>
               <a
-                href={`${API_URL}/template/excel`}
-                download="standort_template.xlsx"
+                href={getApiUrl('/api/template/excel')}
+                download="standort_template.csv"
                 className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors flex items-center space-x-2 whitespace-nowrap"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
