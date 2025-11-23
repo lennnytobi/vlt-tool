@@ -88,7 +88,7 @@ function getScoreColor(score: number): string {
   return 'FFF44336'; // Red
 }
 
-async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Record<string, any[]>): Promise<Buffer> {
+async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Record<string, any[]>): Promise<ArrayBuffer> {
   const excelWorkbook = new ExcelJS.Workbook();
   
   // Process each sheet
@@ -194,7 +194,7 @@ async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Rec
   
   // Convert to buffer
   const buffer = await excelWorkbook.xlsx.writeBuffer();
-  return Buffer.from(buffer);
+  return buffer as ArrayBuffer;
 }
 
 export async function POST(request: Request) {
