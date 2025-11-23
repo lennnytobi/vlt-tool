@@ -31,10 +31,10 @@ interface SingleScoreCardProps {
 
 export default function SingleScoreCard({ result, productFactors }: SingleScoreCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'from-green-500 to-green-600';
-    if (score >= 60) return 'from-blue-500 to-blue-600';
-    if (score >= 40) return 'from-yellow-500 to-yellow-600';
-    return 'from-red-500 to-red-600';
+    if (score >= 75) return 'from-green-500 to-green-400';
+    if (score >= 50) return 'from-blue-500 to-blue-400';
+    if (score >= 25) return 'from-yellow-500 to-yellow-400';
+    return 'from-red-500 to-red-400';
   };
 
 
