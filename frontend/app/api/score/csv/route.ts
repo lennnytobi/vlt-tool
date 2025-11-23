@@ -103,7 +103,7 @@ function normalizeFactorValue(value: any, factorConfig: any): number {
   return 0.5;
 }
 
-function calculateProductScore(factors: Record<string, number>, product: string): number {
+function calculateProductScore(factors: Record<string, number | string>, product: string): number {
   const productConfig = PRODUCT_FACTORS[product as keyof typeof PRODUCT_FACTORS];
   if (!productConfig) {
     throw new Error(`Unbekanntes Produkt: ${product}`);
@@ -288,7 +288,7 @@ export async function POST(request: Request) {
         
         // Process each row
         for (const row of data as any[]) {
-          const factors: Record<string, number> = {};
+          const factors: Record<string, number | string> = {};
           const productConfig = PRODUCT_FACTORS[product as keyof typeof PRODUCT_FACTORS];
           
           if (!productConfig) continue;
@@ -415,7 +415,7 @@ export async function POST(request: Request) {
         continue;
       }
       
-      const factors: Record<string, number> = {};
+      const factors: Record<string, number | string> = {};
       const productConfig = PRODUCT_FACTORS[product as keyof typeof PRODUCT_FACTORS];
       
       for (const factorName of Object.keys(productConfig)) {
