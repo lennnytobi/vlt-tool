@@ -67,26 +67,33 @@ export default function ManualInput() {
       setError(null);
       setLoading(true);
       
-      // Timeout für API-Call (10 Sekunden)
+      // Timeout für API-Call (5 Sekunden für schnellere Fehlerbehandlung)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
       
       fetch(`${API_URL}/api/product-factors/${selectedProduct}`, {
-        signal: controller.signal
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        }
       })
         .then(res => {
           clearTimeout(timeoutId);
           if (!res.ok) {
-            throw new Error(`Backend nicht erreichbar (${res.status}). Bitte prüfen Sie die API_URL Konfiguration.`);
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
           }
           return res.json();
         })
         .then(data => {
+          if (!data || typeof data !== 'object') {
+            throw new Error('Ungültige Antwort vom Backend');
+          }
           setProductFactors(data);
           // Initialisiere Faktoren mit realistischen Standardwerten
           const initialFactors: { [key: string]: number } = {};
           Object.keys(data).forEach(key => {
             const config = data[key];
+            if (!config || typeof config !== 'object') return;
             // Verwende gültige Werte basierend auf dem optimal-Typ
             if (config.optimal === 'target' && config.optimal_value !== undefined) {
               // Für target: Verwende den optimalen Wert
@@ -107,11 +114,28 @@ export default function ManualInput() {
         .catch(err => {
           clearTimeout(timeoutId);
           console.error('Fehler beim Laden der Faktoren:', err);
+          
+          let errorMessage = 'Backend-Verbindung fehlgeschlagen. ';
+          
           if (err.name === 'AbortError') {
-            setError('Backend-Antwort dauerte zu lange. Bitte prüfen Sie, ob das Backend läuft und erreichbar ist.');
+            errorMessage += 'Das Backend antwortet nicht (Timeout). ';
+          } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+            errorMessage += 'Netzwerkfehler - Backend ist nicht erreichbar. ';
           } else {
-            setError(`Backend-Verbindung fehlgeschlagen: ${err.message}. Bitte stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel gesetzt ist und das Backend läuft.`);
+            errorMessage += err.message + '. ';
           }
+          
+          // Zusätzliche Hilfe basierend auf der Umgebung
+          if (typeof window !== 'undefined') {
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (isLocalhost) {
+              errorMessage += 'Lokales Backend starten: `uvicorn main:app --reload`';
+            } else {
+              errorMessage += 'Bitte prüfen Sie NEXT_PUBLIC_API_URL in Vercel Environment Variables. Aktuell: ' + API_URL;
+            }
+          }
+          
+          setError(errorMessage);
           setLoading(false);
         });
     }
