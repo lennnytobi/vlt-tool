@@ -103,13 +103,13 @@ async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Rec
     if (!originalSheet) continue;
     
     // Convert to JSON to get headers
-    const originalData = XLSX.utils.sheet_to_json(originalSheet, { defval: null });
+    const originalData = XLSX.utils.sheet_to_json(originalSheet, { defval: null }) as Record<string, any>[];
     if (originalData.length === 0) continue;
     
     // Create new data with scores
-    const headers = Object.keys(originalData[0]);
+    const headers = Object.keys(originalData[0] || {});
     const newData = results.map((result, idx) => {
-      const originalRow = originalData.find((row: any) => 
+      const originalRow = originalData.find((row: Record<string, any>) => 
         row.location_id === result.location_id && 
         String(row.location_name || '').trim() === String(result.location_name || '').trim()
       ) || originalData[idx] || {};
