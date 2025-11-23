@@ -71,7 +71,10 @@ export default function ManualInput() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
       
-      fetch(getApiUrl(`/api/product-factors/${selectedProduct}`), {
+      const apiUrl = getApiUrl(`/api/product-factors/${selectedProduct}`);
+      console.log('Fetching from:', apiUrl);
+      
+      fetch(apiUrl, {
         signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',

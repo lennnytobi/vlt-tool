@@ -16,26 +16,29 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 // Im Browser: Verwende relative URLs für API Routes
 // Im Server: Verwende absolute URL oder leer für relative
 export function getApiUrl(endpoint: string): string {
-  if (typeof window !== 'undefined') {
-    // Browser: Verwende relative URL (Next.js API Routes)
-    if (!API_URL) {
-      return endpoint;
-    }
-    // Externes Backend ist konfiguriert
-    return `${API_URL}${endpoint}`;
-  }
-  
-  // Server-Side: Verwende absolute URL oder relative
+  // Wenn externes Backend konfiguriert ist, verwende das
   if (API_URL) {
     return `${API_URL}${endpoint}`;
   }
   
-  // Fallback für Server-Side Rendering
+  // Stelle sicher, dass endpoint mit / beginnt
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  
+  // Im Browser: Verwende relative URL (Next.js API Routes)
+  // Relative URLs funktionieren immer, egal ob localhost oder Vercel
+  if (typeof window !== 'undefined') {
+    return normalizedEndpoint;
+  }
+  
+  // Server-Side Rendering: Verwende absolute URL
+  // Auf Vercel: NEXT_PUBLIC_VERCEL_URL ist verfügbar
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
     : 'http://localhost:3000';
   
-  return `${baseUrl}${endpoint}`;
+  return `${baseUrl}${normalizedEndpoint}`;
 }
 
 /**
