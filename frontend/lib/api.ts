@@ -16,19 +16,20 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 // Im Browser: Verwende relative URLs für API Routes
 // Im Server: Verwende absolute URL oder leer für relative
 export function getApiUrl(endpoint: string): string {
-  // Wenn externes Backend konfiguriert ist, verwende das
-  if (API_URL) {
-    return `${API_URL}${endpoint}`;
-  }
-  
   // Stelle sicher, dass endpoint mit / beginnt
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  
+  // Wenn externes Backend konfiguriert ist, verwende das
+  if (API_URL) {
+    // Entferne trailing slash von API_URL falls vorhanden
+    const cleanApiUrl = API_URL.replace(/\/$/, '');
+    return `${cleanApiUrl}${normalizedEndpoint}`;
+  }
   
   // Im Browser: Verwende relative URL (Next.js API Routes)
   // Relative URLs funktionieren immer, egal ob localhost oder Vercel
   if (typeof window !== 'undefined') {
     // Im Browser: Relative URL sollte funktionieren
-    // Falls nicht, können wir auch window.location.origin verwenden
     return normalizedEndpoint;
   }
   
