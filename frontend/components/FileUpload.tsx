@@ -66,8 +66,33 @@ export default function FileUpload() {
         throw new Error(errorData.detail || 'Fehler beim Hochladen');
       }
 
-      const data = await response.json();
-      setResults(data);
+      // Check if response is Excel file
+      const contentType = response.headers.get('content-type');
+      if (contentType?.includes('spreadsheetml') || contentType?.includes('excel')) {
+        // Download Excel file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const contentDisposition = response.headers.get('content-disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'standorte_mit_scores.xlsx'
+          : 'standorte_mit_scores.xlsx';
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        // Show success message
+        setError(null);
+        // Optionally show results in table too
+        // For now, just show success
+      } else {
+        // JSON response (CSV)
+        const data = await response.json();
+        setResults(data);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
     } finally {

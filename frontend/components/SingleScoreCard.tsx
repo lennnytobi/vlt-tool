@@ -187,16 +187,16 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
                 {indicators.good.length > 0 ? (
                   <ul className="space-y-3">
                     {indicators.good.map((item, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-green-50 p-3 rounded-lg min-h-[3rem]">
-                        <span className="text-sm font-medium text-gray-700 flex-1">{item.label}</span>
-                        <span className="text-sm font-bold text-green-700 text-right whitespace-nowrap ml-4">
-                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
+                      <li key={idx} className="flex flex-col bg-green-50 p-4 rounded-lg min-h-[5rem] justify-center">
+                        <span className="text-sm font-medium text-gray-700 mb-2">{item.label}</span>
+                        <span className="text-base font-bold text-green-700">
+                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500 ml-1">{item.unit}</span>
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-gray-400 italic min-h-[3rem] flex items-center">Keine besonders positiven Faktoren.</p>
+                  <p className="text-sm text-gray-400 italic min-h-[5rem] flex items-center">Keine besonders positiven Faktoren.</p>
                 )}
               </div>
 
@@ -209,16 +209,16 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
                 {indicators.bad.length > 0 ? (
                   <ul className="space-y-3">
                     {indicators.bad.map((item, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-red-50 p-3 rounded-lg min-h-[3rem]">
-                        <span className="text-sm font-medium text-gray-700 flex-1">{item.label}</span>
-                        <span className="text-sm font-bold text-red-700 text-right whitespace-nowrap ml-4">
-                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
+                      <li key={idx} className="flex flex-col bg-red-50 p-4 rounded-lg min-h-[5rem] justify-center">
+                        <span className="text-sm font-medium text-gray-700 mb-2">{item.label}</span>
+                        <span className="text-base font-bold text-red-700">
+                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500 ml-1">{item.unit}</span>
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-gray-400 italic min-h-[3rem] flex items-center">Keine kritischen Faktoren.</p>
+                  <p className="text-sm text-gray-400 italic min-h-[5rem] flex items-center">Keine kritischen Faktoren.</p>
                 )}
               </div>
             </div>
