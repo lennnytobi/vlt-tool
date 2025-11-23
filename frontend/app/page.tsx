@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import ManualInput from '@/components/ManualInput';
 import FileUpload from '@/components/FileUpload';
+import FactorWeightsMatrix from '@/components/FactorWeightsMatrix';
 
 export default function Home() {
   const [activeMode, setActiveMode] = useState<'manual' | 'upload'>('manual');
@@ -24,15 +26,28 @@ export default function Home() {
             </p>
           </div>
           <div className="flex-shrink-0 ml-4">
-            <img 
-              src="/vimgrid_logo.jpeg" 
-              alt="VIM GRID Logo" 
-              className="h-16 w-auto object-contain"
-              onError={(e) => {
-                // Fallback wenn Logo nicht geladen werden kann
-                e.currentTarget.style.display = 'none';
-              }}
-            />
+            <div className="relative h-20 w-auto">
+              <Image 
+                src="/vimgrid_logo.jpeg" 
+                alt="VIM GRID Logo" 
+                width={120}
+                height={80}
+                className="h-20 w-auto object-contain"
+                priority
+                unoptimized
+                onError={(e) => {
+                  // Fallback: Zeige Text wenn Bild nicht geladen werden kann
+                  const target = e.target as HTMLImageElement;
+                  if (target.parentElement) {
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'text-blue-600 font-bold text-lg';
+                    fallback.textContent = 'VIMGRID';
+                    target.parentElement.appendChild(fallback);
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -72,6 +87,9 @@ export default function Home() {
         <div className="transition-all duration-300">
           {activeMode === 'manual' ? <ManualInput /> : <FileUpload />}
         </div>
+
+        {/* Factor Weights Matrix */}
+        <FactorWeightsMatrix />
       </div>
     </main>
   );
