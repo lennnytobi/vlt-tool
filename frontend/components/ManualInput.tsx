@@ -129,9 +129,9 @@ export default function ManualInput() {
           if (typeof window !== 'undefined') {
             const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             if (isLocalhost) {
-              errorMessage += 'Lokales Backend starten: `uvicorn main:app --reload`';
+              errorMessage += 'Bitte prüfen Sie, ob der Next.js Dev-Server läuft: `npm run dev`';
             } else {
-              errorMessage += 'Bitte prüfen Sie, ob die API Routes funktionieren.';
+              errorMessage += 'Bitte prüfen Sie, ob die API Routes korrekt deployed sind.';
             }
           }
           
@@ -182,9 +182,8 @@ export default function ManualInput() {
       if (err instanceof TypeError && err.message.includes('fetch')) {
         setError(
           `Backend nicht erreichbar. Bitte prüfen Sie:\n` +
-          `1. Ist NEXT_PUBLIC_API_URL in Vercel Environment Variables gesetzt?\n` +
-          `2. Läuft das Backend und ist es erreichbar?\n` +
-          `Aktuelle API_URL: ${API_URL}`
+          `1. Funktioniert die Next.js API Route?\n` +
+          `2. Ist die Anwendung korrekt deployed?`
         );
       } else {
         setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
@@ -286,7 +285,7 @@ export default function ManualInput() {
                       <h3 className="font-semibold mb-1">Backend-Verbindung fehlgeschlagen</h3>
                       <p className="text-sm">{error}</p>
                       <p className="text-xs mt-2 text-red-700">
-                        <strong>Lösung:</strong> Stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel Environment Variables gesetzt ist und das Backend läuft.
+                        <strong>Lösung:</strong> Das Backend ist integriert in Next.js API Routes. Bitte prüfen Sie, ob die API Routes korrekt deployed sind.
                       </p>
                     </div>
                   </div>

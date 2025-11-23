@@ -45,7 +45,7 @@ export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const url = `${API_URL}${endpoint}`;
+  const url = getApiUrl(endpoint);
   
   try {
     const response = await fetch(url, {
