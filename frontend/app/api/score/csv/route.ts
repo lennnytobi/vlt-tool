@@ -142,7 +142,7 @@ async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Rec
     
     // Add data rows
     for (const rowData of newData) {
-      const row = worksheet.addRow(allHeaders.map(header => rowData[header] ?? ''));
+      const row = worksheet.addRow(allHeaders.map(header => (rowData as Record<string, any>)[header] ?? ''));
       row.alignment = { vertical: 'middle' };
     }
     
@@ -176,7 +176,7 @@ async function createFormattedExcel(workbook: XLSX.WorkBook, resultsBySheet: Rec
       if (header !== 'Score') {
         const maxLength = Math.max(
           header.length,
-          ...newData.map((row: any) => String(row[header] || '').length)
+          ...newData.map((row: Record<string, any>) => String(row[header] || '').length)
         );
         column.width = Math.min(Math.max(maxLength + 2, 10), 50);
       }
