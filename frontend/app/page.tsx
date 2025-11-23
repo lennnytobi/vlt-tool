@@ -14,8 +14,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              VLT (zu Zwecken der Veranschaulichung)
+              VIMGRID Location Tool
             </h1>
+            <p className="mt-1 text-sm text-gray-500 italic">
+              zu Zwecken der Veranschaulichung
+            </p>
             <p className="mt-2 text-sm text-gray-600">
               Berechnung der Erfolgswahrscheinlichkeit von PV-, Speicher- und Ladeinfrastruktur-Standorten
             </p>
