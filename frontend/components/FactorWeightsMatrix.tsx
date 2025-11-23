@@ -68,9 +68,12 @@ export default function FactorWeightsMatrix() {
     <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Faktor-Gewichtungsmatrix
+          Erfolgsfaktoren-Matrix
         </h2>
-        <p className="text-sm text-gray-600">
+        <p className="mt-1 text-sm text-gray-500 italic">
+          zu Zwecken der Veranschaulichung
+        </p>
+        <p className="mt-2 text-sm text-gray-600">
           Übersicht der Gewichtung einzelner Faktoren für die Score-Berechnung
         </p>
       </div>
@@ -108,7 +111,7 @@ export default function FactorWeightsMatrix() {
               <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">
                 Faktor
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-gray-900">
+              <th className="px-6 py-4 text-right text-sm font-bold text-gray-900">
                 Gewicht
               </th>
             </tr>
@@ -127,7 +130,7 @@ export default function FactorWeightsMatrix() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-6 py-4 text-right">
                     <span className="text-xl font-bold text-gray-900">
                       {factor.weightPercent}%
                     </span>
