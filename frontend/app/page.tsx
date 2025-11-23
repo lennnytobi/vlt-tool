@@ -22,9 +22,9 @@ export default function Home() {
           </div>
           <div className="flex-shrink-0 ml-4">
             <img 
-              src="/vimgrid-logo.svg" 
+              src="/vimgrid_logo.jpeg" 
               alt="VIM GRID Logo" 
-              className="h-16 w-16"
+              className="h-16 w-auto object-contain"
               onError={(e) => {
                 // Fallback wenn Logo nicht geladen werden kann
                 e.currentTarget.style.display = 'none';
