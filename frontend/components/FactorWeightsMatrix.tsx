@@ -111,14 +111,10 @@ export default function FactorWeightsMatrix() {
               <th className="px-6 py-4 text-center text-sm font-bold text-gray-900">
                 Gewicht
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-gray-900 w-64">
-                Anteil
-              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {currentProduct.factors.map((factor, index) => {
-              const colorIntensity = Math.min(100, factor.weightPercent * 2);
               return (
                 <tr key={factor.factor} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
@@ -132,52 +128,14 @@ export default function FactorWeightsMatrix() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-lg font-bold text-gray-900">
-                      {factor.weight.toFixed(2)}
+                    <span className="text-xl font-bold text-gray-900">
+                      {factor.weightPercent}%
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-1 bg-gray-200 rounded-full h-6 overflow-hidden">
-                        <div
-                          className="h-6 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
-                          style={{ width: `${factor.weightPercent}%` }}
-                        >
-                          {factor.weightPercent >= 15 && (
-                            <span className="text-xs font-bold text-white">
-                              {factor.weightPercent}%
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {factor.weightPercent < 15 && (
-                        <span className="text-sm font-semibold text-gray-700 w-12 text-right">
-                          {factor.weightPercent}%
-                        </span>
-                      )}
-                    </div>
                   </td>
                 </tr>
               );
             })}
           </tbody>
-          <tfoot>
-            <tr className="bg-gray-50 border-t-2 border-gray-300">
-              <td className="px-6 py-4 font-bold text-gray-900">
-                Gesamt
-              </td>
-              <td className="px-6 py-4 text-center">
-                <span className="text-lg font-bold text-gray-900">
-                  1.00
-                </span>
-              </td>
-              <td className="px-6 py-4 text-center">
-                <span className="text-lg font-bold text-gray-900">
-                  100%
-                </span>
-              </td>
-            </tr>
-          </tfoot>
         </table>
       </div>
 
