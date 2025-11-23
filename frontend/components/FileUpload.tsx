@@ -206,41 +206,58 @@ export default function FileUpload() {
         </form>
 
         {/* Template Download */}
-        <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Benötigen Sie eine Vorlage?
-              </h3>
-              <p className="text-xs text-gray-600 leading-relaxed">
-                Laden Sie unsere Vorlagen-Datei herunter, die bereits alle erforderlichen Spalten 
-                und Beispieldaten enthält. Einfach ausfüllen und hochladen!
-              </p>
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Template */}
+          <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Excel-Vorlage
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                  Laden Sie unsere Vorlagen-Datei herunter, die bereits alle erforderlichen Spalten enthält.
+                </p>
+                <a
+                  href={getApiUrl('/api/template/excel')}
+                  download="standort_template.xlsx"
+                  className="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Vorlage herunterladen</span>
+                </a>
+              </div>
             </div>
-            <div className="ml-4 flex flex-col gap-2">
-              <a
-                href={getApiUrl('/api/template/csv')}
-                download="standort_template.csv"
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors flex items-center space-x-2 whitespace-nowrap"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>CSV</span>
-              </a>
-              <a
-                href={getApiUrl('/api/template/excel')}
-                download="standort_template.csv"
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors flex items-center space-x-2 whitespace-nowrap"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>Excel</span>
-              </a>
+          </div>
+
+          {/* Mock Data */}
+          <div className="p-6 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Testdaten
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                  Laden Sie Beispieldaten herunter (20 Einträge pro Produkt), um die Anwendung zu testen.
+                </p>
+                <a
+                  href={getApiUrl('/api/template/mock')}
+                  download="mock_standorte.xlsx"
+                  className="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-900 text-sm font-medium rounded-md border border-gray-300 transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Testdaten herunterladen</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

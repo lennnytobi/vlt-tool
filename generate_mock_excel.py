@@ -88,7 +88,7 @@ CHARGING_NAMES = [
 ]
 
 
-def generate_pv_data(num_rows=15):
+def generate_pv_data(num_rows=20):
     """Generate PV location data"""
     data = []
     for i in range(1, num_rows + 1):
@@ -106,7 +106,7 @@ def generate_pv_data(num_rows=15):
     return data
 
 
-def generate_storage_data(num_rows=15):
+def generate_storage_data(num_rows=20):
     """Generate Storage location data"""
     data = []
     for i in range(1, num_rows + 1):
@@ -124,7 +124,7 @@ def generate_storage_data(num_rows=15):
     return data
 
 
-def generate_charging_data(num_rows=15):
+def generate_charging_data(num_rows=20):
     """Generate Charging location data"""
     data = []
     for i in range(1, num_rows + 1):
