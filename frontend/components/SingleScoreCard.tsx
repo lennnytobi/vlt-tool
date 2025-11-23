@@ -37,19 +37,6 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
     return 'from-red-500 to-red-600';
   };
 
-  const getScoreLabel = (score: number) => {
-    if (score >= 80) return 'Ausgezeichnet';
-    if (score >= 60) return 'Gut';
-    if (score >= 40) return 'Mittel';
-    return 'Niedrig';
-  };
-
-  const getScoreBadgeColor = (score: number) => {
-    if (score >= 80) return 'bg-green-100 text-green-800 border-green-200';
-    if (score >= 60) return 'bg-blue-100 text-blue-800 border-blue-200';
-    if (score >= 40) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-    return 'bg-red-100 text-red-800 border-red-200';
-  };
 
   const productInfo = {
     pv: { name: 'Photovoltaik', icon: '☀️', description: 'Solarenergieanlage' },
@@ -131,34 +118,60 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
 
   return (
     <div className="space-y-6">
-      {/* Header Card */}
-      <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-        <h2 className="text-xl font-bold text-gray-900">
-          {result.location_name}
-        </h2>
-        <div className="flex items-center space-x-2 mt-2 text-sm text-gray-600">
-          <span className="text-lg">{info.icon}</span>
-          <span className="font-medium">{info.name}</span>
-          {info.description && <span>• {info.description}</span>}
-        </div>
-      </div>
-
-      {/* Score Card */}
+      {/* Combined Location Name and Score Card */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Colored Top Bar */}
         <div className={`h-3 bg-gradient-to-r ${getScoreColor(result.score)}`}></div>
         
         <div className="p-8">
+          {/* Location Name and Product Info */}
+          <div className="mb-6 pb-6 border-b border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              {result.location_name}
+            </h2>
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <span className="text-lg">{info.icon}</span>
+              <span className="font-medium">{info.name}</span>
+              {info.description && <span>• {info.description}</span>}
+            </div>
+          </div>
+
           {/* Main Score Display */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <div className="inline-flex items-baseline space-x-3">
               <span className={`text-7xl font-bold bg-gradient-to-r ${getScoreColor(result.score)} bg-clip-text text-transparent`}>
                 {result.score.toFixed(1)}
               </span>
               <span className="text-3xl text-gray-400 font-medium">/100</span>
             </div>
-            <div className={`inline-block mt-6 px-8 py-3 rounded-full border-2 ${getScoreBadgeColor(result.score)} font-semibold`}>
-              {getScoreLabel(result.score)}
+            
+            {/* Score Scale */}
+            <div className="mt-6 max-w-md mx-auto">
+              <div className="flex items-center justify-between text-xs font-medium text-gray-600 mb-2">
+                <span>0</span>
+                <span>25</span>
+                <span>50</span>
+                <span>75</span>
+                <span>100</span>
+              </div>
+              <div className="relative h-4 rounded-full overflow-hidden bg-gray-200">
+                <div className="absolute inset-0 flex">
+                  <div className="flex-1 bg-gradient-to-r from-red-500 to-red-400"></div>
+                  <div className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-400"></div>
+                  <div className="flex-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
+                  <div className="flex-1 bg-gradient-to-r from-green-500 to-green-400"></div>
+                </div>
+                <div 
+                  className="absolute top-0 bottom-0 w-1 bg-gray-900 shadow-lg"
+                  style={{ left: `${result.score}%` }}
+                ></div>
+              </div>
+              <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
+                <span className="text-red-600">Niedrig</span>
+                <span className="text-yellow-600">Mittel</span>
+                <span className="text-blue-600">Gut</span>
+                <span className="text-green-600">Ausgezeichnet</span>
+              </div>
             </div>
           </div>
 
@@ -174,16 +187,16 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
                 {indicators.good.length > 0 ? (
                   <ul className="space-y-3">
                     {indicators.good.map((item, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-green-50 p-3 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700">{item.label}</span>
-                        <span className="text-sm font-bold text-green-700">
-                          {item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
+                      <li key={idx} className="flex items-center justify-between bg-green-50 p-3 rounded-lg min-h-[3rem]">
+                        <span className="text-sm font-medium text-gray-700 flex-1">{item.label}</span>
+                        <span className="text-sm font-bold text-green-700 text-right whitespace-nowrap ml-4">
+                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-gray-400 italic">Keine besonders positiven Faktoren.</p>
+                  <p className="text-sm text-gray-400 italic min-h-[3rem] flex items-center">Keine besonders positiven Faktoren.</p>
                 )}
               </div>
 
@@ -191,21 +204,21 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
               <div>
                 <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center">
                   <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                  Optimierungspotenzial
+                  Limitierende Indikatoren
                 </h3>
                 {indicators.bad.length > 0 ? (
                   <ul className="space-y-3">
                     {indicators.bad.map((item, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-red-50 p-3 rounded-lg">
-                        <span className="text-sm font-medium text-gray-700">{item.label}</span>
-                        <span className="text-sm font-bold text-red-700">
-                          {item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
+                      <li key={idx} className="flex items-center justify-between bg-red-50 p-3 rounded-lg min-h-[3rem]">
+                        <span className="text-sm font-medium text-gray-700 flex-1">{item.label}</span>
+                        <span className="text-sm font-bold text-red-700 text-right whitespace-nowrap ml-4">
+                          {typeof item.value === 'number' ? item.value.toLocaleString('de-DE', { maximumFractionDigits: 2 }) : item.value} <span className="text-xs font-normal text-gray-500">{item.unit}</span>
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-gray-400 italic">Keine kritischen Faktoren.</p>
+                  <p className="text-sm text-gray-400 italic min-h-[3rem] flex items-center">Keine kritischen Faktoren.</p>
                 )}
               </div>
             </div>
