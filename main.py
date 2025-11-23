@@ -30,7 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Produktspezifische Faktordefinitionen
+# Produktspezifische Faktordefinitionen (Reduziert auf Top 5 pro Produkt)
 PRODUCT_FACTORS = {
     "pv": {
         "roof_area_sqm": {
@@ -40,7 +40,7 @@ PRODUCT_FACTORS = {
             "min": 50,
             "max": 5000,
             "optimal": "higher",
-            "weight": 0.25
+            "weight": 0.30
         },
         "solar_irradiation": {
             "label": "Sonneneinstrahlung",
@@ -49,27 +49,17 @@ PRODUCT_FACTORS = {
             "min": 800,
             "max": 1300,
             "optimal": "higher",
-            "weight": 0.20
-        },
-        "building_age_years": {
-            "label": "Gebäudealter",
-            "unit": "Jahre",
-            "description": "Alter des Gebäudes (neuere haben bessere Statik)",
-            "min": 0,
-            "max": 100,
-            "optimal": "lower",
-            "optimal_max": 50,
-            "weight": 0.10
+            "weight": 0.25
         },
         "roof_orientation_degrees": {
             "label": "Dachausrichtung",
-            "unit": "Grad (0=Nord, 90=Ost, 180=Süd, 270=West)",
+            "unit": "Grad (0=Nord, 180=Süd)",
             "description": "Ausrichtung des Dachs (Süd ist optimal)",
             "min": 0,
             "max": 360,
             "optimal": "target",
             "optimal_value": 180,
-            "weight": 0.15
+            "weight": 0.20
         },
         "roof_tilt_degrees": {
             "label": "Dachneigung",
@@ -90,15 +80,6 @@ PRODUCT_FACTORS = {
             "max": 0.50,
             "optimal": "higher",
             "weight": 0.15
-        },
-        "competitors_nearby": {
-            "label": "Wettbewerber in der Nähe",
-            "unit": "Anzahl",
-            "description": "Anzahl konkurrierender PV-Installationen im Umkreis",
-            "min": 0,
-            "max": 20,
-            "optimal": "lower",
-            "weight": 0.05
         }
     },
     "storage": {
@@ -109,7 +90,7 @@ PRODUCT_FACTORS = {
             "min": 0,
             "max": 500,
             "optimal": "higher",
-            "weight": 0.20
+            "weight": 0.25
         },
         "annual_consumption_kwh": {
             "label": "Jährlicher Stromverbrauch",
@@ -118,7 +99,7 @@ PRODUCT_FACTORS = {
             "min": 1000,
             "max": 500000,
             "optimal": "higher",
-            "weight": 0.20
+            "weight": 0.25
         },
         "peak_load_kw": {
             "label": "Spitzenlast",
@@ -127,7 +108,7 @@ PRODUCT_FACTORS = {
             "min": 10,
             "max": 500,
             "optimal": "higher",
-            "weight": 0.15
+            "weight": 0.20
         },
         "grid_connection_kw": {
             "label": "Netzanschlussleistung",
@@ -146,24 +127,6 @@ PRODUCT_FACTORS = {
             "max": 0.50,
             "optimal": "higher",
             "weight": 0.15
-        },
-        "power_outages_per_year": {
-            "label": "Stromausfälle pro Jahr",
-            "unit": "Anzahl",
-            "description": "Häufigkeit von Stromausfällen (USV-Bedarf)",
-            "min": 0,
-            "max": 50,
-            "optimal": "higher",
-            "weight": 0.10
-        },
-        "competitors_nearby": {
-            "label": "Wettbewerber in der Nähe",
-            "unit": "Anzahl",
-            "description": "Anzahl konkurrierender Speicher-Installationen",
-            "min": 0,
-            "max": 20,
-            "optimal": "lower",
-            "weight": 0.05
         }
     },
     "charging": {
@@ -174,7 +137,7 @@ PRODUCT_FACTORS = {
             "min": 5,
             "max": 500,
             "optimal": "higher",
-            "weight": 0.20
+            "weight": 0.30
         },
         "daily_traffic_volume": {
             "label": "Tägliches Verkehrsaufkommen",
@@ -183,7 +146,7 @@ PRODUCT_FACTORS = {
             "min": 50,
             "max": 10000,
             "optimal": "higher",
-            "weight": 0.20
+            "weight": 0.25
         },
         "avg_parking_duration_min": {
             "label": "Durchschnittliche Parkdauer",
@@ -203,15 +166,6 @@ PRODUCT_FACTORS = {
             "optimal": "higher",
             "weight": 0.15
         },
-        "nearest_charger_km": {
-            "label": "Entfernung nächste Ladestation",
-            "unit": "km",
-            "description": "Distanz zur nächsten öffentlichen Ladestation",
-            "min": 0,
-            "max": 50,
-            "optimal": "higher",
-            "weight": 0.10
-        },
         "ev_density_percent": {
             "label": "E-Auto-Dichte",
             "unit": "%",
@@ -220,15 +174,6 @@ PRODUCT_FACTORS = {
             "max": 30,
             "optimal": "higher",
             "weight": 0.15
-        },
-        "competitors_nearby": {
-            "label": "Wettbewerber in der Nähe",
-            "unit": "Anzahl",
-            "description": "Anzahl konkurrierender Ladestationen",
-            "min": 0,
-            "max": 20,
-            "optimal": "lower",
-            "weight": 0.05
         }
     }
 }
@@ -572,18 +517,16 @@ async def download_csv_template():
     """
     Lädt eine CSV-Vorlagendatei mit Beispieldaten für alle Produkte herunter.
     """
-    # Erstelle Template-Daten für alle Produkte
+    # Erstelle Template-Daten für alle Produkte (Reduziert auf Top 5)
     pv_data = {
         "location_id": 1,
         "location_name": "Beispiel PV-Standort",
         "product": "pv",
         "roof_area_sqm": 250,
         "solar_irradiation": 1100,
-        "building_age_years": 15,
         "roof_orientation_degrees": 180,
         "roof_tilt_degrees": 32,
-        "electricity_price_eur": 0.35,
-        "competitors_nearby": 3
+        "electricity_price_eur": 0.35
     }
     
     storage_data = {
@@ -594,9 +537,7 @@ async def download_csv_template():
         "annual_consumption_kwh": 80000,
         "peak_load_kw": 120,
         "grid_connection_kw": 150,
-        "electricity_price_eur": 0.35,
-        "power_outages_per_year": 2,
-        "competitors_nearby": 1
+        "electricity_price_eur": 0.35
     }
     
     charging_data = {
@@ -607,9 +548,7 @@ async def download_csv_template():
         "daily_traffic_volume": 1500,
         "avg_parking_duration_min": 120,
         "grid_connection_kw": 200,
-        "nearest_charger_km": 5.5,
-        "ev_density_percent": 12,
-        "competitors_nearby": 2
+        "ev_density_percent": 12
     }
     
     # Kombiniere alle Daten

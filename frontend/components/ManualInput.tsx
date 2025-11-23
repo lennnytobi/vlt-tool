@@ -67,8 +67,15 @@ export default function ManualInput() {
       setError(null);
       setLoading(true);
       
-      fetch(`${API_URL}/api/product-factors/${selectedProduct}`)
+      // Timeout für API-Call (10 Sekunden)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      fetch(`${API_URL}/api/product-factors/${selectedProduct}`, {
+        signal: controller.signal
+      })
         .then(res => {
+          clearTimeout(timeoutId);
           if (!res.ok) {
             throw new Error(`Backend nicht erreichbar (${res.status}). Bitte prüfen Sie die API_URL Konfiguration.`);
           }
@@ -98,8 +105,13 @@ export default function ManualInput() {
           setLoading(false);
         })
         .catch(err => {
+          clearTimeout(timeoutId);
           console.error('Fehler beim Laden der Faktoren:', err);
-          setError(`Backend-Verbindung fehlgeschlagen: ${err.message}. Bitte stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel gesetzt ist und das Backend läuft.`);
+          if (err.name === 'AbortError') {
+            setError('Backend-Antwort dauerte zu lange. Bitte prüfen Sie, ob das Backend läuft und erreichbar ist.');
+          } else {
+            setError(`Backend-Verbindung fehlgeschlagen: ${err.message}. Bitte stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel gesetzt ist und das Backend läuft.`);
+          }
           setLoading(false);
         });
     }
@@ -347,8 +359,8 @@ export default function ManualInput() {
 
       {/* Results */}
       <div>
-        {result && selectedProduct ? (
-          <SingleScoreCard result={result} />
+        {result && selectedProduct && productFactors ? (
+          <SingleScoreCard result={result} productFactors={productFactors} />
         ) : (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <div className="text-gray-300 mb-6">

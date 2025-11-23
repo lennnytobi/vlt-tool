@@ -11,13 +11,26 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            VLT (zu Zwecken der Veranschaulichung)
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Berechnung der Erfolgswahrscheinlichkeit von PV-, Speicher- und Ladeinfrastruktur-Standorten
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              VLT (zu Zwecken der Veranschaulichung)
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              Berechnung der Erfolgswahrscheinlichkeit von PV-, Speicher- und Ladeinfrastruktur-Standorten
+            </p>
+          </div>
+          <div className="flex-shrink-0 ml-4">
+            <img 
+              src="/vimgrid-logo.svg" 
+              alt="VIM GRID Logo" 
+              className="h-16 w-16"
+              onError={(e) => {
+                // Fallback wenn Logo nicht geladen werden kann
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </div>
         </div>
       </div>
 
