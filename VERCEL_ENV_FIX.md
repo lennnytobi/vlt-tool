@@ -53,3 +53,4 @@ Fetching from: /api/product-factors/pv
 
 **Nach diesem Fix sollte alles funktionieren!** 🚀
 
+

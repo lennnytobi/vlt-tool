@@ -1,34 +1,73 @@
 import { NextResponse } from 'next/server';
 
-// Produktspezifische Faktordefinitionen (gleiche wie oben)
+// Gemeinsame Faktoren für alle Produkte
+const COMMON_FACTORS = {
+  eigentuemer: { type: "boolean", weight: 0.10 },
+  umsatz: { min: 100000, max: 100000000, optimal: "higher", weight: 0.10 },
+  mitarbeiterzahl: { min: 1, max: 10000, optimal: "higher", weight: 0.10 },
+  branche: { type: "dropdown", weight: 0.10 }
+};
+
+// Produktspezifische Faktordefinitionen
 const PRODUCT_FACTORS = {
   pv: {
-    roof_area_sqm: { min: 50, max: 5000, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.30 },
-    solar_irradiation: { min: 800, max: 1300, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.25 },
-    roof_orientation_degrees: { min: 0, max: 360, optimal: "target", optimal_value: 180, optimal_min: undefined, optimal_max: undefined, weight: 0.20 },
-    roof_tilt_degrees: { min: 0, max: 90, optimal: "range", optimal_value: undefined, optimal_min: 25, optimal_max: 40, weight: 0.10 },
-    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 }
+    ...COMMON_FACTORS,
+    roof_area_sqm: { min: 50, max: 5000, optimal: "higher", weight: 0.20 },
+    solar_irradiation: { min: 800, max: 1300, optimal: "higher", weight: 0.15 },
+    roof_orientation_degrees: { min: 0, max: 360, optimal: "target", optimal_value: 180, weight: 0.15 },
+    roof_tilt_degrees: { min: 0, max: 90, optimal: "range", optimal_min: 25, optimal_max: 40, weight: 0.10 },
+    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.10 }
   },
   storage: {
-    existing_pv_kwp: { min: 0, max: 500, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.25 },
-    annual_consumption_kwh: { min: 1000, max: 500000, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.25 },
-    peak_load_kw: { min: 10, max: 500, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.20 },
-    grid_connection_kw: { min: 10, max: 500, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 },
-    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 }
+    ...COMMON_FACTORS,
+    existing_pv_kwp: { min: 0, max: 500, optimal: "higher", weight: 0.20 },
+    annual_consumption_kwh: { min: 1000, max: 500000, optimal: "higher", weight: 0.20 },
+    peak_load_kw: { min: 10, max: 500, optimal: "higher", weight: 0.15 },
+    grid_connection_kw: { min: 10, max: 500, optimal: "higher", weight: 0.10 },
+    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.10 }
   },
   charging: {
-    parking_spaces: { min: 5, max: 500, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.30 },
-    daily_traffic_volume: { min: 50, max: 10000, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.25 },
-    avg_parking_duration_min: { min: 15, max: 480, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 },
-    grid_connection_kw: { min: 20, max: 1000, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 },
-    ev_density_percent: { min: 0, max: 30, optimal: "higher", optimal_value: undefined, optimal_min: undefined, optimal_max: undefined, weight: 0.15 }
+    ...COMMON_FACTORS,
+    parking_spaces: { min: 5, max: 500, optimal: "higher", weight: 0.20 },
+    daily_traffic_volume: { min: 50, max: 10000, optimal: "higher", weight: 0.20 },
+    avg_parking_duration_min: { min: 15, max: 480, optimal: "higher", weight: 0.10 },
+    grid_connection_kw: { min: 20, max: 1000, optimal: "higher", weight: 0.10 },
+    ev_density_percent: { min: 0, max: 30, optimal: "higher", weight: 0.10 }
   }
 };
 
-function normalizeFactorValue(value: number, factorConfig: any): number {
+function normalizeFactorValue(value: any, factorConfig: any): number {
+  // Handle boolean type (Eigentümer: Ja=1, Nein=0)
+  if (factorConfig.type === "boolean") {
+    if (typeof value === "boolean") return value ? 1.0 : 0.0;
+    if (typeof value === "string") {
+      const lower = value.toLowerCase();
+      if (lower === "ja" || lower === "yes" || lower === "true" || lower === "1") return 1.0;
+      return 0.0;
+    }
+    if (typeof value === "number") return value > 0 ? 1.0 : 0.0;
+    return 0.0;
+  }
+  
+  // Handle dropdown type (Branche: all industries get same score for now, can be customized)
+  if (factorConfig.type === "dropdown") {
+    // For now, all industries get a neutral score of 0.7
+    // This can be customized later with industry-specific scores
+    return 0.7;
+  }
+  
+  // Handle numeric types
+  if (typeof value !== "number" || isNaN(value)) {
+    return 0.0;
+  }
+  
   const minVal = factorConfig.min;
   const maxVal = factorConfig.max;
   const optimalType = factorConfig.optimal;
+  
+  if (minVal === undefined || maxVal === undefined) {
+    return 0.5;
+  }
   
   value = Math.max(minVal, Math.min(maxVal, value));
   
@@ -114,4 +153,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
 

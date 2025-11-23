@@ -8,13 +8,15 @@ interface FactorConfig {
   label: string;
   unit: string;
   description: string;
-  min: number;
-  max: number;
-  optimal: string;
+  min?: number;
+  max?: number;
+  optimal?: string;
   weight: number;
   optimal_value?: number;
   optimal_min?: number;
   optimal_max?: number;
+  type?: "boolean" | "dropdown";
+  options?: string[];
 }
 
 interface ProductFactors {
@@ -31,7 +33,7 @@ interface ScoreResult {
 export default function ManualInput() {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [locationName, setLocationName] = useState('');
-  const [factors, setFactors] = useState<{ [key: string]: number }>({});
+  const [factors, setFactors] = useState<{ [key: string]: number | string | boolean }>({});
   const [productFactors, setProductFactors] = useState<ProductFactors | null>(null);
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -93,21 +95,33 @@ export default function ManualInput() {
           }
           setProductFactors(data);
           // Initialisiere Faktoren mit realistischen Standardwerten
-          const initialFactors: { [key: string]: number } = {};
+          const initialFactors: { [key: string]: number | string | boolean } = {};
           Object.keys(data).forEach(key => {
             const config = data[key];
             if (!config || typeof config !== 'object') return;
-            // Verwende gültige Werte basierend auf dem optimal-Typ
-            if (config.optimal === 'target' && config.optimal_value !== undefined) {
-              // Für target: Verwende den optimalen Wert
-              initialFactors[key] = config.optimal_value;
-            } else if (config.optimal === 'range' && config.optimal_min !== undefined && config.optimal_max !== undefined) {
-              // Für range: Verwende die Mitte des optimalen Bereichs
-              initialFactors[key] = (config.optimal_min + config.optimal_max) / 2;
-            } else {
-              // Für higher/lower: Verwende 60% des Bereichs (guter Wert)
-              const range = config.max - config.min;
-              initialFactors[key] = config.min + (range * 0.6);
+            
+            // Handle boolean type
+            if (config.type === 'boolean') {
+              initialFactors[key] = false; // Default: Nein
+            }
+            // Handle dropdown type
+            else if (config.type === 'dropdown' && config.options && config.options.length > 0) {
+              initialFactors[key] = config.options[0]; // Default: first option
+            }
+            // Handle numeric types
+            else if (config.min !== undefined && config.max !== undefined) {
+              // Verwende gültige Werte basierend auf dem optimal-Typ
+              if (config.optimal === 'target' && config.optimal_value !== undefined) {
+                // Für target: Verwende den optimalen Wert
+                initialFactors[key] = config.optimal_value;
+              } else if (config.optimal === 'range' && config.optimal_min !== undefined && config.optimal_max !== undefined) {
+                // Für range: Verwende die Mitte des optimalen Bereichs
+                initialFactors[key] = (config.optimal_min + config.optimal_max) / 2;
+              } else {
+                // Für higher/lower: Verwende 60% des Bereichs (guter Wert)
+                const range = config.max - config.min;
+                initialFactors[key] = config.min + (range * 0.6);
+              }
             }
           });
           setFactors(initialFactors);
@@ -146,7 +160,7 @@ export default function ManualInput() {
     }
   }, [selectedProduct]);
 
-  const handleFactorChange = (key: string, value: number) => {
+  const handleFactorChange = (key: string, value: number | string | boolean) => {
     setFactors(prev => ({ ...prev, [key]: value }));
   };
 
@@ -166,7 +180,16 @@ export default function ManualInput() {
         body: JSON.stringify({
           location_name: locationName,
           product: selectedProduct,
-          factors: factors,
+          factors: Object.fromEntries(
+            Object.entries(factors).map(([key, value]) => {
+              // Convert boolean to number for API
+              if (typeof value === 'boolean') {
+                return [key, value ? 1 : 0];
+              }
+              // Keep string values for dropdown (will be handled by API)
+              return [key, value];
+            })
+          ),
         }),
       });
 
@@ -323,53 +346,123 @@ export default function ManualInput() {
 
               {/* Factors */}
               {productFactors && Object.entries(productFactors).map(([key, config]) => {
-                const step = config.max > 1000 ? 100 : config.max > 100 ? 10 : config.max > 10 ? 1 : 0.01;
-                const currentValue = factors[key] || config.min;
-                
-                return (
-                  <div key={key} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0">
-                    <label className="block text-sm font-semibold text-gray-900">
-                      {config.label}
-                      <span className="text-gray-500 font-normal ml-2">({config.unit})</span>
-                    </label>
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      {config.description}
-                    </p>
-                    
-                    {/* Slider and Number Input */}
-                    <div className="space-y-3 mt-3">
-                      <div className="flex items-center space-x-4">
-                        <input
-                          type="range"
-                          min={config.min}
-                          max={config.max}
-                          step={step}
-                          value={currentValue}
-                          onChange={(e) => handleFactorChange(key, parseFloat(e.target.value))}
-                          className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-600"
-                          style={{
-                            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((currentValue - config.min) / (config.max - config.min)) * 100}%, #e5e7eb ${((currentValue - config.min) / (config.max - config.min)) * 100}%, #e5e7eb 100%)`
-                          }}
-                        />
-                        <input
-                          type="number"
-                          min={config.min}
-                          max={config.max}
-                          step={step}
-                          value={currentValue}
-                          onChange={(e) => handleFactorChange(key, parseFloat(e.target.value) || config.min)}
-                          className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-md text-center font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                      
-                      {/* Range Labels */}
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>{config.min} {config.unit}</span>
-                        <span>{config.max} {config.unit}</span>
+                // Handle boolean type (Eigentümer)
+                if (config.type === 'boolean') {
+                  const currentValue = factors[key] === true || factors[key] === 'true' || factors[key] === 1;
+                  return (
+                    <div key={key} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0">
+                      <label className="block text-sm font-semibold text-gray-900">
+                        {config.label}
+                      </label>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        {config.description}
+                      </p>
+                      <div className="flex items-center space-x-4 mt-3">
+                        <button
+                          type="button"
+                          onClick={() => handleFactorChange(key, true)}
+                          className={`flex-1 px-4 py-3 rounded-md font-medium transition-all ${
+                            currentValue
+                              ? 'bg-blue-500 text-white shadow-md'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          Ja
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFactorChange(key, false)}
+                          className={`flex-1 px-4 py-3 rounded-md font-medium transition-all ${
+                            !currentValue
+                              ? 'bg-blue-500 text-white shadow-md'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          Nein
+                        </button>
                       </div>
                     </div>
-                  </div>
-                );
+                  );
+                }
+                
+                // Handle dropdown type (Branche)
+                if (config.type === 'dropdown' && config.options) {
+                  const currentValue = factors[key] || config.options[0];
+                  return (
+                    <div key={key} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0">
+                      <label className="block text-sm font-semibold text-gray-900">
+                        {config.label}
+                      </label>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        {config.description}
+                      </p>
+                      <select
+                        value={String(currentValue)}
+                        onChange={(e) => handleFactorChange(key, e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mt-3"
+                      >
+                        {config.options.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+                
+                // Handle numeric types (with slider and number input)
+                if (config.min !== undefined && config.max !== undefined) {
+                  const step = config.max > 1000 ? 100 : config.max > 100 ? 10 : config.max > 10 ? 1 : 0.01;
+                  const currentValue = typeof factors[key] === 'number' ? factors[key] : (config.min || 0);
+                  
+                  return (
+                    <div key={key} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0">
+                      <label className="block text-sm font-semibold text-gray-900">
+                        {config.label}
+                        <span className="text-gray-500 font-normal ml-2">({config.unit})</span>
+                      </label>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        {config.description}
+                      </p>
+                      
+                      {/* Slider and Number Input */}
+                      <div className="space-y-3 mt-3">
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="range"
+                            min={config.min}
+                            max={config.max}
+                            step={step}
+                            value={currentValue}
+                            onChange={(e) => handleFactorChange(key, parseFloat(e.target.value))}
+                            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-600"
+                            style={{
+                              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((currentValue - config.min) / (config.max - config.min)) * 100}%, #e5e7eb ${((currentValue - config.min) / (config.max - config.min)) * 100}%, #e5e7eb 100%)`
+                            }}
+                          />
+                          <input
+                            type="number"
+                            min={config.min}
+                            max={config.max}
+                            step={step}
+                            value={currentValue}
+                            onChange={(e) => handleFactorChange(key, parseFloat(e.target.value) || config.min || 0)}
+                            className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-md text-center font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                        
+                        {/* Range Labels */}
+                        <div className="flex justify-between text-xs text-gray-500">
+                          <span>{config.min} {config.unit}</span>
+                          <span>{config.max} {config.unit}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                return null;
               })}
 
               {/* Submit Button */}

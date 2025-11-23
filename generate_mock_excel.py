@@ -88,6 +88,27 @@ CHARGING_NAMES = [
 ]
 
 
+INDUSTRIES = [
+    "Energie & Versorgung",
+    "Produktion & Fertigung",
+    "Logistik & Transport",
+    "Einzelhandel & Handel",
+    "Gastronomie & Hotellerie",
+    "Büro & Verwaltung",
+    "Gesundheitswesen",
+    "Bildung & Forschung",
+    "Immobilien & Bau",
+    "IT & Telekommunikation",
+    "Automobil & Mobilität",
+    "Chemie & Pharma",
+    "Lebensmittel & Getränke",
+    "Textil & Mode",
+    "Maschinenbau",
+    "Elektronik & Elektrotechnik",
+    "Landwirtschaft",
+    "Sonstige"
+]
+
 def generate_pv_data(num_rows=20):
     """Generate PV location data"""
     data = []
@@ -97,6 +118,10 @@ def generate_pv_data(num_rows=20):
             "location_name": random.choice(PV_NAMES),
             "address": random.choice(ADDRESSES),
             "product": "pv",
+            "eigentuemer": random.choice(["Ja", "Nein"]),
+            "umsatz": random.randint(100000, 100000000),
+            "mitarbeiterzahl": random.randint(1, 10000),
+            "branche": random.choice(INDUSTRIES),
             "roof_area_sqm": random.randint(100, 2000),
             "solar_irradiation": random.randint(900, 1250),
             "roof_orientation_degrees": random.choice([150, 160, 170, 180, 190, 200, 210]),
@@ -115,6 +140,10 @@ def generate_storage_data(num_rows=20):
             "location_name": random.choice(STORAGE_NAMES),
             "address": random.choice(ADDRESSES),
             "product": "storage",
+            "eigentuemer": random.choice(["Ja", "Nein"]),
+            "umsatz": random.randint(100000, 100000000),
+            "mitarbeiterzahl": random.randint(1, 10000),
+            "branche": random.choice(INDUSTRIES),
             "existing_pv_kwp": random.randint(50, 300),
             "annual_consumption_kwh": random.randint(50000, 400000),
             "peak_load_kw": random.randint(50, 300),
@@ -133,6 +162,10 @@ def generate_charging_data(num_rows=20):
             "location_name": random.choice(CHARGING_NAMES),
             "address": random.choice(ADDRESSES),
             "product": "charging",
+            "eigentuemer": random.choice(["Ja", "Nein"]),
+            "umsatz": random.randint(100000, 100000000),
+            "mitarbeiterzahl": random.randint(1, 10000),
+            "branche": random.choice(INDUSTRIES),
             "parking_spaces": random.randint(20, 300),
             "daily_traffic_volume": random.randint(200, 5000),
             "avg_parking_duration_min": random.randint(30, 240),
