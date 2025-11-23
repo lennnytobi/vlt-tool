@@ -27,6 +27,8 @@ export function getApiUrl(endpoint: string): string {
   // Im Browser: Verwende relative URL (Next.js API Routes)
   // Relative URLs funktionieren immer, egal ob localhost oder Vercel
   if (typeof window !== 'undefined') {
+    // Im Browser: Relative URL sollte funktionieren
+    // Falls nicht, können wir auch window.location.origin verwenden
     return normalizedEndpoint;
   }
   

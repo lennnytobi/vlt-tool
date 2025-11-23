@@ -117,13 +117,15 @@ export default function ManualInput() {
         .catch(err => {
           clearTimeout(timeoutId);
           console.error('Fehler beim Laden der Faktoren:', err);
+          console.error('API URL war:', apiUrl);
+          console.error('Window location:', typeof window !== 'undefined' ? window.location.href : 'N/A');
           
           let errorMessage = 'Backend-Verbindung fehlgeschlagen. ';
           
           if (err.name === 'AbortError') {
-            errorMessage += 'Das Backend antwortet nicht (Timeout). ';
+            errorMessage += 'Das Backend antwortet nicht (Timeout nach 5 Sekunden). ';
           } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-            errorMessage += 'Netzwerkfehler - Backend ist nicht erreichbar. ';
+            errorMessage += 'Netzwerkfehler - API Route ist nicht erreichbar. ';
           } else {
             errorMessage += err.message + '. ';
           }
@@ -134,7 +136,7 @@ export default function ManualInput() {
             if (isLocalhost) {
               errorMessage += 'Bitte prüfen Sie, ob der Next.js Dev-Server läuft: `npm run dev`';
             } else {
-              errorMessage += 'Bitte prüfen Sie, ob die API Routes korrekt deployed sind.';
+              errorMessage += `Bitte prüfen Sie die Browser-Konsole (F12) für Details. API URL: ${apiUrl}`;
             }
           }
           
