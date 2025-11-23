@@ -64,8 +64,16 @@ export default function ManualInput() {
   // Lade Faktordefinitionen wenn Produkt gewählt wird
   useEffect(() => {
     if (selectedProduct) {
+      setError(null);
+      setLoading(true);
+      
       fetch(`${API_URL}/api/product-factors/${selectedProduct}`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`Backend nicht erreichbar (${res.status}). Bitte prüfen Sie die API_URL Konfiguration.`);
+          }
+          return res.json();
+        })
         .then(data => {
           setProductFactors(data);
           // Initialisiere Faktoren mit realistischen Standardwerten
@@ -87,8 +95,13 @@ export default function ManualInput() {
           });
           setFactors(initialFactors);
           setResult(null);
+          setLoading(false);
         })
-        .catch(err => console.error('Fehler beim Laden der Faktoren:', err));
+        .catch(err => {
+          console.error('Fehler beim Laden der Faktoren:', err);
+          setError(`Backend-Verbindung fehlgeschlagen: ${err.message}. Bitte stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel gesetzt ist und das Backend läuft.`);
+          setLoading(false);
+        });
     }
   }, [selectedProduct]);
 
@@ -98,7 +111,7 @@ export default function ManualInput() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedProduct || !locationName) return;
+    if (!selectedProduct || !locationName || !productFactors) return;
 
     setLoading(true);
     setError(null);
@@ -117,14 +130,29 @@ export default function ManualInput() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Fehler bei der Berechnung');
+        let errorMessage = 'Fehler bei der Berechnung';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorMessage;
+        } catch {
+          errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
       setResult(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError(
+          `Backend nicht erreichbar. Bitte prüfen Sie:\n` +
+          `1. Ist NEXT_PUBLIC_API_URL in Vercel Environment Variables gesetzt?\n` +
+          `2. Läuft das Backend und ist es erreichbar?\n` +
+          `Aktuelle API_URL: ${API_URL}`
+        );
+      } else {
+        setError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten');
+      }
     } finally {
       setLoading(false);
     }
@@ -211,6 +239,32 @@ export default function ManualInput() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border-2 border-red-200 text-red-800 px-6 py-4 rounded-lg">
+                  <div className="flex items-start space-x-3">
+                    <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-1">Backend-Verbindung fehlgeschlagen</h3>
+                      <p className="text-sm">{error}</p>
+                      <p className="text-xs mt-2 text-red-700">
+                        <strong>Lösung:</strong> Stellen Sie sicher, dass NEXT_PUBLIC_API_URL in Vercel Environment Variables gesetzt ist und das Backend läuft.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Loading State */}
+              {loading && !productFactors && (
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  <p className="text-sm text-gray-600 mt-2">Lade Faktordefinitionen...</p>
+                </div>
+              )}
+
               {/* Location Name */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -223,6 +277,7 @@ export default function ManualInput() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="z.B. Parkhaus Innenstadt"
                   required
+                  disabled={!productFactors}
                 />
               </div>
 
@@ -280,18 +335,11 @@ export default function ManualInput() {
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !productFactors || Object.keys(factors).length === 0}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-md transition-all disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
               >
-                {loading ? 'Berechne...' : 'Score berechnen'}
+                {loading ? 'Berechne...' : !productFactors ? 'Faktoren werden geladen...' : 'Score berechnen'}
               </button>
-
-              {/* Error Message */}
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                  {error}
-                </div>
-              )}
             </form>
           </div>
         )}
