@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import ManualInput from '@/components/ManualInput';
 import FileUpload from '@/components/FileUpload';
 import FactorWeightsMatrix from '@/components/FactorWeightsMatrix';
@@ -24,29 +25,19 @@ export default function Home() {
               Berechnung der Erfolgswahrscheinlichkeit von PV-, Speicher- und Ladeinfrastruktur-Standorten
             </p>
           </div>
-          <div className="flex-shrink-0 ml-4">
-            <img 
+          <div className="flex-shrink-0 ml-4 relative h-20 w-auto">
+            <Image 
               src="/vimgrid_logo_png.png" 
               alt="VIM GRID Logo" 
-              className="h-20 w-auto object-contain max-w-[150px]"
-              style={{ imageRendering: 'auto' }}
-              onError={(e) => {
-                // Fallback: Versuche andere Formate
-                const target = e.target as HTMLImageElement;
-                if (target.src.includes('_png.png')) {
-                  target.src = '/vimgrid_logo.jpeg';
-                } else if (target.src.includes('.jpeg')) {
-                  target.src = '/vimgrid-logo.svg';
-                } else {
-                  // Letzter Fallback: Zeige Text
-                  target.style.display = 'none';
-                  if (target.parentElement && !target.parentElement.querySelector('.logo-fallback')) {
-                    const fallback = document.createElement('div');
-                    fallback.className = 'logo-fallback text-blue-600 font-bold text-lg';
-                    fallback.textContent = 'VIMGRID';
-                    target.parentElement.appendChild(fallback);
-                  }
-                }
+              width={150}
+              height={80}
+              className="h-20 w-auto object-contain"
+              priority
+              unoptimized
+              style={{ 
+                maxWidth: '150px',
+                height: 'auto',
+                imageRendering: 'auto'
               }}
             />
           </div>
