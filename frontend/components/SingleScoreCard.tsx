@@ -4,13 +4,15 @@ interface FactorConfig {
   label: string;
   unit: string;
   description: string;
-  min: number;
-  max: number;
-  optimal: string;
+  min?: number;
+  max?: number;
+  optimal?: string;
+  weight: number;
   optimal_value?: number;
   optimal_min?: number;
   optimal_max?: number;
-  optimal_max_limit?: number; // Falls im Backend "optimal_max" für lower verwendet wurde
+  type?: "boolean" | "dropdown";
+  options?: string[];
 }
 
 interface ProductFactors {
@@ -21,7 +23,7 @@ interface ScoreResult {
   location_name: string;
   product: string;
   score: number;
-  factors_used: { [key: string]: number };
+  factors_used: { [key: string]: number | string };
 }
 
 interface SingleScoreCardProps {
@@ -51,6 +53,21 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
   const getFactorStatus = (key: string, value: number): 'good' | 'bad' | 'neutral' => {
     if (!productFactors || !productFactors[key]) return 'neutral';
     const config = productFactors[key];
+    
+    // Handle boolean type
+    if (config.type === 'boolean') {
+      return value > 0 ? 'good' : 'neutral';
+    }
+    
+    // Handle dropdown type
+    if (config.type === 'dropdown') {
+      return 'neutral'; // Dropdowns get neutral score for now
+    }
+    
+    // Handle numeric types - check if min/max are defined
+    if (config.min === undefined || config.max === undefined || config.optimal === undefined) {
+      return 'neutral';
+    }
     
     // Sicherstellen, dass value eine gültige Zahl ist
     if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) return 'neutral';
@@ -98,15 +115,22 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
   const getIndicators = () => {
     if (!productFactors) return { good: [], bad: [] };
     
-    const good: Array<{ label: string, value: number, unit: string }> = [];
-    const bad: Array<{ label: string, value: number, unit: string }> = [];
+    const good: Array<{ label: string, value: number | string, unit: string }> = [];
+    const bad: Array<{ label: string, value: number | string, unit: string }> = [];
 
     Object.entries(result.factors_used).forEach(([key, value]) => {
-      const status = getFactorStatus(key, value);
       const config = productFactors[key];
       if (!config) return;
-
-      const item = { label: config.label, value, unit: config.unit };
+      
+      // Skip dropdown and boolean types for indicators (they don't have numeric scores)
+      if (config.type === 'dropdown' || config.type === 'boolean') return;
+      
+      // Ensure value is a number for numeric factors
+      const numValue = typeof value === 'number' ? value : parseFloat(String(value));
+      if (isNaN(numValue)) return;
+      
+      const status = getFactorStatus(key, numValue);
+      const item = { label: config.label, value: numValue, unit: config.unit };
       if (status === 'good') good.push(item);
       if (status === 'bad') bad.push(item);
     });

@@ -27,7 +27,7 @@ interface ScoreResult {
   location_name: string;
   product: string;
   score: number;
-  factors_used: { [key: string]: number };
+  factors_used: { [key: string]: number | string };
 }
 
 export default function ManualInput() {
