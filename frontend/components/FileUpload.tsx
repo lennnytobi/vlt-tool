@@ -101,10 +101,10 @@ export default function FileUpload() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Upload Area */}
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
           CSV oder Excel-Datei hochladen
         </h2>
 
@@ -115,7 +115,7 @@ export default function FileUpload() {
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
+            className={`border-2 border-dashed rounded-lg p-6 sm:p-8 lg:p-12 text-center transition-all ${
               dragActive
                 ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-300 hover:border-gray-400'

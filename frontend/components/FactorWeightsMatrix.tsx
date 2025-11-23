@@ -65,53 +65,53 @@ export default function FactorWeightsMatrix() {
   const currentProduct = PRODUCT_WEIGHTS.find(p => p.product === selectedProduct) || PRODUCT_WEIGHTS[0];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mt-6 sm:mt-8">
+      <div className="mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Erfolgsfaktoren-Matrix
         </h2>
-        <p className="mt-1 text-sm text-gray-500 italic">
+        <p className="mt-1 text-xs sm:text-sm text-gray-500 italic">
           zu Zwecken der Veranschaulichung
         </p>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-xs sm:text-sm text-gray-600">
           Übersicht der Gewichtung einzelner Faktoren für die Score-Berechnung
         </p>
       </div>
 
       {/* Product Selector */}
-      <div className="flex space-x-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
         {PRODUCT_WEIGHTS.map((product) => (
           <button
             key={product.product}
             onClick={() => setSelectedProduct(product.product)}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 ${
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all duration-200 flex items-center space-x-2 ${
               selectedProduct === product.product
                 ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            <span className="text-xl">{product.icon}</span>
-            <span>{product.name}</span>
+            <span className="text-lg sm:text-xl">{product.icon}</span>
+            <span className="hidden xs:inline">{product.name}</span>
           </button>
         ))}
       </div>
 
       {/* Description */}
-      <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
-        <p className="text-sm text-gray-700 leading-relaxed">
+      <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+        <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
           {currentProduct.description}
         </p>
       </div>
 
       {/* Matrix Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
         <table className="w-full">
           <thead>
             <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-900">
                 Faktor
               </th>
-              <th className="px-6 py-4 text-right text-sm font-bold text-gray-900">
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-bold text-gray-900">
                 Gewicht
               </th>
             </tr>
@@ -120,18 +120,18 @@ export default function FactorWeightsMatrix() {
             {currentProduct.factors.map((factor, index) => {
               return (
                 <tr key={factor.factor} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-lg font-bold text-gray-400 w-6">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <span className="text-base sm:text-lg font-bold text-gray-400 w-5 sm:w-6">
                         {index + 1}
                       </span>
-                      <span className="font-medium text-gray-900">
+                      <span className="text-sm sm:text-base font-medium text-gray-900">
                         {factor.label}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <span className="text-xl font-bold text-gray-900">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                    <span className="text-lg sm:text-xl font-bold text-gray-900">
                       {factor.weightPercent}%
                     </span>
                   </td>

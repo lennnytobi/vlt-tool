@@ -199,16 +199,16 @@ export default function ManualInput() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
       {/* Input Form */}
       <div className="space-y-6">
         {/* Product Selection */}
         {!selectedProduct ? (
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
               Produkttyp wählen
             </h2>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
               Wählen Sie zunächst, welches Produkt Sie bewerten möchten
             </p>
 
@@ -217,7 +217,7 @@ export default function ManualInput() {
                 <button
                   key={product.id}
                   onClick={() => setSelectedProduct(product.id)}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all text-left group"
+                  className="p-4 sm:p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all text-left group"
                 >
                   <div className="flex items-start space-x-4">
                     <div className={`text-4xl p-3 rounded-lg bg-gradient-to-br ${product.color} flex-shrink-0`}>
@@ -250,18 +250,18 @@ export default function ManualInput() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-8">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8">
             {/* Header with product and back button */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
               <div className="flex items-center space-x-3">
-                <span className="text-3xl">
+                <span className="text-2xl sm:text-3xl">
                   {products.find(p => p.id === selectedProduct)?.icon}
                 </span>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                     {products.find(p => p.id === selectedProduct)?.name}
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     Faktoren eingeben
                   </p>
                 </div>
@@ -272,7 +272,7 @@ export default function ManualInput() {
                   setResult(null);
                   setLocationName('');
                 }}
-                className="text-sm text-gray-600 hover:text-gray-900 underline"
+                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline self-start sm:self-auto"
               >
                 Produkt wechseln
               </button>
@@ -358,7 +358,7 @@ export default function ManualInput() {
                           step={step}
                           value={currentValue}
                           onChange={(e) => handleFactorChange(key, parseFloat(e.target.value) || config.min)}
-                          className="w-32 px-3 py-2 border border-gray-300 rounded-md text-center font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-md text-center font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                       
@@ -390,10 +390,10 @@ export default function ManualInput() {
         {result && selectedProduct && productFactors ? (
           <SingleScoreCard result={result} productFactors={productFactors} />
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="text-gray-300 mb-6">
+          <div className="bg-white rounded-lg shadow-md p-6 sm:p-12 text-center">
+            <div className="text-gray-300 mb-4 sm:mb-6">
               <svg
-                className="w-20 h-20 mx-auto"
+                className="w-16 h-16 sm:w-20 sm:h-20 mx-auto"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

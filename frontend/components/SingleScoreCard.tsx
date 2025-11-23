@@ -123,26 +123,26 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
         {/* Colored Top Bar */}
         <div className={`h-3 bg-gradient-to-r ${getScoreColor(result.score)}`}></div>
         
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           {/* Location Name and Product Info */}
-          <div className="mb-6 pb-6 border-b border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-gray-100">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
               {result.location_name}
             </h2>
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <span className="text-lg">{info.icon}</span>
+            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-600">
+              <span className="text-base sm:text-lg">{info.icon}</span>
               <span className="font-medium">{info.name}</span>
-              {info.description && <span>• {info.description}</span>}
+              {info.description && <span className="hidden sm:inline">• {info.description}</span>}
             </div>
           </div>
 
           {/* Main Score Display */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-baseline space-x-3">
-              <span className={`text-7xl font-bold bg-gradient-to-r ${getScoreColor(result.score)} bg-clip-text text-transparent`}>
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="inline-flex items-baseline space-x-2 sm:space-x-3">
+              <span className={`text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r ${getScoreColor(result.score)} bg-clip-text text-transparent`}>
                 {result.score.toFixed(1)}
               </span>
-              <span className="text-3xl text-gray-400 font-medium">/100</span>
+              <span className="text-2xl sm:text-3xl text-gray-400 font-medium">/100</span>
             </div>
             
             {/* Score Scale */}
@@ -177,7 +177,7 @@ export default function SingleScoreCard({ result, productFactors }: SingleScoreC
 
           {/* Key Indicators Section */}
           {(indicators.good.length > 0 || indicators.bad.length > 0) && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t border-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-gray-100">
               {/* Positiv */}
               <div>
                 <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center">
