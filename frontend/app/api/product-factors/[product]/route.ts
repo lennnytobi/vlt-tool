@@ -150,9 +150,10 @@ const PRODUCT_FACTORS = {
 
 export async function GET(
   request: Request,
-  { params }: { params: { product: string } }
+  { params }: { params: Promise<{ product: string }> }
 ) {
-  const product = params.product.toLowerCase();
+  const { product: productParam } = await params;
+  const product = productParam.toLowerCase();
   
   if (!(product in PRODUCT_FACTORS)) {
     return NextResponse.json(
