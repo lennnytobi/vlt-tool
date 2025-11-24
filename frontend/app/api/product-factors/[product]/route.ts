@@ -12,13 +12,13 @@ const COMMON_FACTORS = {
   },
   umsatz: {
     label: "Umsatz",
-    unit: "×10k €/Jahr",
-    description: "Jährlicher Umsatz des Unternehmens (in 10.000 € Schritten)",
-    min: 10,
-    max: 10000,
+    unit: "×1k €/Jahr",
+    description: "Jährlicher Umsatz des Unternehmens (in 1.000 € Schritten)",
+    min: 100,
+    max: 100000,
     optimal: "higher",
     weight: 0.10,
-    step: 10
+    step: 1
   },
   mitarbeiterzahl: {
     label: "Mitarbeiterzahl",
@@ -69,7 +69,7 @@ const PRODUCT_FACTORS = {
       min: 50,
       max: 5000,
       optimal: "higher",
-      weight: 0.20
+      weight: 0.17
     },
     solar_irradiation: {
       label: "Sonneneinstrahlung",
@@ -78,7 +78,7 @@ const PRODUCT_FACTORS = {
       min: 800,
       max: 1300,
       optimal: "higher",
-      weight: 0.15
+      weight: 0.13
     },
     roof_orientation_degrees: {
       label: "Dachausrichtung",
@@ -88,7 +88,7 @@ const PRODUCT_FACTORS = {
       max: 360,
       optimal: "target",
       optimal_value: 180,
-      weight: 0.15
+      weight: 0.13
     },
     roof_tilt_degrees: {
       label: "Dachneigung",
@@ -99,7 +99,7 @@ const PRODUCT_FACTORS = {
       optimal: "range",
       optimal_min: 25,
       optimal_max: 40,
-      weight: 0.10
+      weight: 0.09
     },
     electricity_price_eur: {
       label: "Strompreis",
@@ -108,7 +108,7 @@ const PRODUCT_FACTORS = {
       min: 0.20,
       max: 0.50,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.08
     }
   },
   storage: {
@@ -120,7 +120,7 @@ const PRODUCT_FACTORS = {
       min: 0,
       max: 500,
       optimal: "higher",
-      weight: 0.20
+      weight: 0.16
     },
     annual_consumption_kwh: {
       label: "Jährlicher Stromverbrauch",
@@ -129,7 +129,7 @@ const PRODUCT_FACTORS = {
       min: 1000,
       max: 500000,
       optimal: "higher",
-      weight: 0.20
+      weight: 0.16
     },
     peak_load_kw: {
       label: "Spitzenlast",
@@ -138,7 +138,7 @@ const PRODUCT_FACTORS = {
       min: 10,
       max: 500,
       optimal: "higher",
-      weight: 0.15
+      weight: 0.12
     },
     grid_connection_kw: {
       label: "Netzanschlussleistung",
@@ -147,7 +147,7 @@ const PRODUCT_FACTORS = {
       min: 10,
       max: 500,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.08
     },
     electricity_price_eur: {
       label: "Strompreis",
@@ -156,7 +156,7 @@ const PRODUCT_FACTORS = {
       min: 0.20,
       max: 0.50,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.08
     }
   },
   charging: {
@@ -168,7 +168,7 @@ const PRODUCT_FACTORS = {
       min: 5,
       max: 500,
       optimal: "higher",
-      weight: 0.20
+      weight: 0.17
     },
     daily_traffic_volume: {
       label: "Tägliches Verkehrsaufkommen",
@@ -177,7 +177,7 @@ const PRODUCT_FACTORS = {
       min: 50,
       max: 10000,
       optimal: "higher",
-      weight: 0.20
+      weight: 0.17
     },
     avg_parking_duration_min: {
       label: "Durchschnittliche Parkdauer",
@@ -186,7 +186,7 @@ const PRODUCT_FACTORS = {
       min: 15,
       max: 480,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.09
     },
     grid_connection_kw: {
       label: "Netzanschlussleistung",
@@ -195,7 +195,7 @@ const PRODUCT_FACTORS = {
       min: 20,
       max: 1000,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.09
     },
     ev_density_percent: {
       label: "E-Auto-Dichte",
@@ -204,7 +204,7 @@ const PRODUCT_FACTORS = {
       min: 0,
       max: 30,
       optimal: "higher",
-      weight: 0.10
+      weight: 0.08
     }
   }
 };

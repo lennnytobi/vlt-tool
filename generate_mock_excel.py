@@ -119,7 +119,7 @@ def generate_pv_data(num_rows=20):
             "address": random.choice(ADDRESSES),
             "product": "pv",
             "eigentuemer": random.choice(["Ja", "Nein"]),
-            "umsatz": random.randint(10, 10000),  # 10-10000 in 10k steps (represents 100k-100M)
+            "umsatz": random.randint(100, 100000),  # 100-100000 in 1k steps (represents 100k-100M)
             "mitarbeiterzahl": random.randint(1, 10000),
             "branche": random.choice(INDUSTRIES),
             "roof_area_sqm": random.randint(100, 2000),
@@ -141,7 +141,7 @@ def generate_storage_data(num_rows=20):
             "address": random.choice(ADDRESSES),
             "product": "storage",
             "eigentuemer": random.choice(["Ja", "Nein"]),
-            "umsatz": random.randint(10, 10000),  # 10-10000 in 10k steps (represents 100k-100M)
+            "umsatz": random.randint(100, 100000),  # 100-100000 in 1k steps (represents 100k-100M)
             "mitarbeiterzahl": random.randint(1, 10000),
             "branche": random.choice(INDUSTRIES),
             "existing_pv_kwp": random.randint(50, 300),
@@ -163,7 +163,7 @@ def generate_charging_data(num_rows=20):
             "address": random.choice(ADDRESSES),
             "product": "charging",
             "eigentuemer": random.choice(["Ja", "Nein"]),
-            "umsatz": random.randint(10, 10000),  # 10-10000 in 10k steps (represents 100k-100M)
+            "umsatz": random.randint(100, 100000),  # 100-100000 in 1k steps (represents 100k-100M)
             "mitarbeiterzahl": random.randint(1, 10000),
             "branche": random.choice(INDUSTRIES),
             "parking_spaces": random.randint(20, 300),

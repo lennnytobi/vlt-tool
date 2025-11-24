@@ -28,10 +28,11 @@ const PRODUCT_WEIGHTS: ProductWeights[] = [
       { factor: 'umsatz', label: 'Umsatz', weight: 0.10, weightPercent: 10 },
       { factor: 'mitarbeiterzahl', label: 'Mitarbeiterzahl', weight: 0.10, weightPercent: 10 },
       { factor: 'branche', label: 'Branche', weight: 0.10, weightPercent: 10 },
-      { factor: 'roof_area_sqm', label: 'Dachfläche', weight: 0.20, weightPercent: 20 },
-      { factor: 'solar_irradiation', label: 'Sonneneinstrahlung', weight: 0.15, weightPercent: 15 },
-      { factor: 'roof_orientation_degrees', label: 'Dachausrichtung', weight: 0.15, weightPercent: 15 },
-      { factor: 'roof_tilt_degrees', label: 'Dachneigung', weight: 0.10, weightPercent: 10 },
+      { factor: 'roof_area_sqm', label: 'Dachfläche', weight: 0.17, weightPercent: 17 },
+      { factor: 'solar_irradiation', label: 'Sonneneinstrahlung', weight: 0.13, weightPercent: 13 },
+      { factor: 'roof_orientation_degrees', label: 'Dachausrichtung', weight: 0.13, weightPercent: 13 },
+      { factor: 'roof_tilt_degrees', label: 'Dachneigung', weight: 0.09, weightPercent: 9 },
+      { factor: 'electricity_price_eur', label: 'Strompreis', weight: 0.08, weightPercent: 8 },
     ]
   },
   {
@@ -44,10 +45,11 @@ const PRODUCT_WEIGHTS: ProductWeights[] = [
       { factor: 'umsatz', label: 'Umsatz', weight: 0.10, weightPercent: 10 },
       { factor: 'mitarbeiterzahl', label: 'Mitarbeiterzahl', weight: 0.10, weightPercent: 10 },
       { factor: 'branche', label: 'Branche', weight: 0.10, weightPercent: 10 },
-      { factor: 'existing_pv_kwp', label: 'Vorhandene PV-Leistung', weight: 0.20, weightPercent: 20 },
-      { factor: 'annual_consumption_kwh', label: 'Jährlicher Stromverbrauch', weight: 0.20, weightPercent: 20 },
-      { factor: 'peak_load_kw', label: 'Spitzenlast', weight: 0.15, weightPercent: 15 },
-      { factor: 'grid_connection_kw', label: 'Netzanschlussleistung', weight: 0.10, weightPercent: 10 },
+      { factor: 'existing_pv_kwp', label: 'Vorhandene PV-Leistung', weight: 0.16, weightPercent: 16 },
+      { factor: 'annual_consumption_kwh', label: 'Jährlicher Stromverbrauch', weight: 0.16, weightPercent: 16 },
+      { factor: 'peak_load_kw', label: 'Spitzenlast', weight: 0.12, weightPercent: 12 },
+      { factor: 'grid_connection_kw', label: 'Netzanschlussleistung', weight: 0.08, weightPercent: 8 },
+      { factor: 'electricity_price_eur', label: 'Strompreis', weight: 0.08, weightPercent: 8 },
     ]
   },
   {
@@ -60,10 +62,11 @@ const PRODUCT_WEIGHTS: ProductWeights[] = [
       { factor: 'umsatz', label: 'Umsatz', weight: 0.10, weightPercent: 10 },
       { factor: 'mitarbeiterzahl', label: 'Mitarbeiterzahl', weight: 0.10, weightPercent: 10 },
       { factor: 'branche', label: 'Branche', weight: 0.10, weightPercent: 10 },
-      { factor: 'parking_spaces', label: 'Anzahl Parkplätze', weight: 0.20, weightPercent: 20 },
-      { factor: 'daily_traffic_volume', label: 'Tägliches Verkehrsaufkommen', weight: 0.20, weightPercent: 20 },
-      { factor: 'avg_parking_duration_min', label: 'Durchschnittliche Parkdauer', weight: 0.10, weightPercent: 10 },
-      { factor: 'grid_connection_kw', label: 'Netzanschlussleistung', weight: 0.10, weightPercent: 10 },
+      { factor: 'parking_spaces', label: 'Anzahl Parkplätze', weight: 0.17, weightPercent: 17 },
+      { factor: 'daily_traffic_volume', label: 'Tägliches Verkehrsaufkommen', weight: 0.17, weightPercent: 17 },
+      { factor: 'avg_parking_duration_min', label: 'Durchschnittliche Parkdauer', weight: 0.09, weightPercent: 9 },
+      { factor: 'grid_connection_kw', label: 'Netzanschlussleistung', weight: 0.09, weightPercent: 9 },
+      { factor: 'ev_density_percent', label: 'E-Auto-Dichte', weight: 0.08, weightPercent: 8 },
     ]
   }
 ];

@@ -26,13 +26,13 @@ export default function Home() {
                 Berechnung der Erfolgswahrscheinlichkeit von PV-, Speicher- und Ladeinfrastruktur-Standorten
               </p>
             </div>
-            <div className="flex-shrink-0 sm:ml-4 relative h-16 sm:h-20 w-auto">
+            <div className="flex-shrink-0 sm:ml-4 flex items-center h-full">
               <Image 
                 src="/vimgrid_logo_png.png" 
                 alt="VIM GRID Logo" 
                 width={150}
                 height={80}
-                className="h-16 sm:h-20 w-auto object-contain"
+                className="h-12 sm:h-16 w-auto object-contain"
                 priority
                 unoptimized
                 style={{ 

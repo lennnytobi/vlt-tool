@@ -129,7 +129,7 @@ function generatePvData(numRows: number = 20): any[] {
       address: getRandomItem(ADDRESSES),
       product: "pv",
       eigentuemer: getRandomItem(["Ja", "Nein"]),
-      umsatz: Math.floor(Math.random() * 9990) + 10, // 10-10000 in 10k steps
+      umsatz: Math.floor(Math.random() * 99900) + 100, // 100-100000 in 1k steps
       mitarbeiterzahl: Math.floor(Math.random() * 9999) + 1,
       branche: getRandomItem(INDUSTRIES),
       roof_area_sqm: Math.floor(Math.random() * 1900) + 100,
@@ -151,7 +151,7 @@ function generateStorageData(numRows: number = 20): any[] {
       address: getRandomItem(ADDRESSES),
       product: "storage",
       eigentuemer: getRandomItem(["Ja", "Nein"]),
-      umsatz: Math.floor(Math.random() * 9990) + 10, // 10-10000 in 10k steps
+      umsatz: Math.floor(Math.random() * 99900) + 100, // 100-100000 in 1k steps
       mitarbeiterzahl: Math.floor(Math.random() * 9999) + 1,
       branche: getRandomItem(INDUSTRIES),
       existing_pv_kwp: Math.floor(Math.random() * 250) + 50,
@@ -173,7 +173,7 @@ function generateChargingData(numRows: number = 20): any[] {
       address: getRandomItem(ADDRESSES),
       product: "charging",
       eigentuemer: getRandomItem(["Ja", "Nein"]),
-      umsatz: Math.floor(Math.random() * 9990) + 10, // 10-10000 in 10k steps
+      umsatz: Math.floor(Math.random() * 99900) + 100, // 100-100000 in 1k steps
       mitarbeiterzahl: Math.floor(Math.random() * 9999) + 1,
       branche: getRandomItem(INDUSTRIES),
       parking_spaces: Math.floor(Math.random() * 280) + 20,

@@ -417,10 +417,10 @@ export default function ManualInput() {
                   const step = (config as any).step || (config.max > 1000 ? 100 : config.max > 100 ? 10 : config.max > 10 ? 1 : 0.01);
                   const currentValue = typeof factors[key] === 'number' ? factors[key] : (config.min || 0);
                   
-                  // Format display value for Umsatz (show in 10k format)
+                  // Format display value for Umsatz (show in 1k format)
                   const formatValue = (val: number) => {
                     if (key === 'umsatz') {
-                      return `${val} × 10k`;
+                      return `${val} × 1k`;
                     }
                     return val.toString();
                   };

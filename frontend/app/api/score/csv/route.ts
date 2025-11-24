@@ -5,7 +5,7 @@ import ExcelJS from 'exceljs';
 // Gemeinsame Faktoren für alle Produkte
 const COMMON_FACTORS = {
   eigentuemer: { type: "boolean", weight: 0.10 },
-  umsatz: { min: 10, max: 10000, optimal: "higher", weight: 0.10, step: 10, scale: 10000 },
+  umsatz: { min: 100, max: 100000, optimal: "higher", weight: 0.10, step: 1, scale: 1000 },
   mitarbeiterzahl: { min: 1, max: 10000, optimal: "higher", weight: 0.10 },
   branche: { type: "dropdown", weight: 0.10 }
 };
@@ -14,27 +14,27 @@ const COMMON_FACTORS = {
 const PRODUCT_FACTORS = {
   pv: {
     ...COMMON_FACTORS,
-    roof_area_sqm: { min: 50, max: 5000, optimal: "higher", weight: 0.20 },
-    solar_irradiation: { min: 800, max: 1300, optimal: "higher", weight: 0.15 },
-    roof_orientation_degrees: { min: 0, max: 360, optimal: "target", optimal_value: 180, weight: 0.15 },
-    roof_tilt_degrees: { min: 0, max: 90, optimal: "range", optimal_min: 25, optimal_max: 40, weight: 0.10 },
-    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.10 }
+    roof_area_sqm: { min: 50, max: 5000, optimal: "higher", weight: 0.17 },
+    solar_irradiation: { min: 800, max: 1300, optimal: "higher", weight: 0.13 },
+    roof_orientation_degrees: { min: 0, max: 360, optimal: "target", optimal_value: 180, weight: 0.13 },
+    roof_tilt_degrees: { min: 0, max: 90, optimal: "range", optimal_min: 25, optimal_max: 40, weight: 0.09 },
+    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.08 }
   },
   storage: {
     ...COMMON_FACTORS,
-    existing_pv_kwp: { min: 0, max: 500, optimal: "higher", weight: 0.20 },
-    annual_consumption_kwh: { min: 1000, max: 500000, optimal: "higher", weight: 0.20 },
-    peak_load_kw: { min: 10, max: 500, optimal: "higher", weight: 0.15 },
-    grid_connection_kw: { min: 10, max: 500, optimal: "higher", weight: 0.10 },
-    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.10 }
+    existing_pv_kwp: { min: 0, max: 500, optimal: "higher", weight: 0.16 },
+    annual_consumption_kwh: { min: 1000, max: 500000, optimal: "higher", weight: 0.16 },
+    peak_load_kw: { min: 10, max: 500, optimal: "higher", weight: 0.12 },
+    grid_connection_kw: { min: 10, max: 500, optimal: "higher", weight: 0.08 },
+    electricity_price_eur: { min: 0.20, max: 0.50, optimal: "higher", weight: 0.08 }
   },
   charging: {
     ...COMMON_FACTORS,
-    parking_spaces: { min: 5, max: 500, optimal: "higher", weight: 0.20 },
-    daily_traffic_volume: { min: 50, max: 10000, optimal: "higher", weight: 0.20 },
-    avg_parking_duration_min: { min: 15, max: 480, optimal: "higher", weight: 0.10 },
-    grid_connection_kw: { min: 20, max: 1000, optimal: "higher", weight: 0.10 },
-    ev_density_percent: { min: 0, max: 30, optimal: "higher", weight: 0.10 }
+    parking_spaces: { min: 5, max: 500, optimal: "higher", weight: 0.17 },
+    daily_traffic_volume: { min: 50, max: 10000, optimal: "higher", weight: 0.17 },
+    avg_parking_duration_min: { min: 15, max: 480, optimal: "higher", weight: 0.09 },
+    grid_connection_kw: { min: 20, max: 1000, optimal: "higher", weight: 0.09 },
+    ev_density_percent: { min: 0, max: 30, optimal: "higher", weight: 0.08 }
   }
 };
 
@@ -312,8 +312,8 @@ export async function POST(request: Request) {
               else {
                 let value = parseFloat(String(rawValue));
                 if (!isNaN(value)) {
-                  // Convert Umsatz from actual value to 10k units if needed
-                  if (factorName === 'umsatz' && factorConfig.scale && value >= 10000) {
+                  // Convert Umsatz from actual value to 1k units if needed
+                  if (factorName === 'umsatz' && factorConfig.scale && value >= 1000) {
                     value = value / factorConfig.scale;
                   }
                   factors[factorName] = value;
