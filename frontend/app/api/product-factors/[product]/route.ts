@@ -12,12 +12,13 @@ const COMMON_FACTORS = {
   },
   umsatz: {
     label: "Umsatz",
-    unit: "€/Jahr",
-    description: "Jährlicher Umsatz des Unternehmens",
-    min: 100000,
-    max: 100000000,
+    unit: "×10k €/Jahr",
+    description: "Jährlicher Umsatz des Unternehmens (in 10.000 € Schritten)",
+    min: 10,
+    max: 10000,
     optimal: "higher",
-    weight: 0.10
+    weight: 0.10,
+    step: 10
   },
   mitarbeiterzahl: {
     label: "Mitarbeiterzahl",

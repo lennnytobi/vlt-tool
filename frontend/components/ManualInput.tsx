@@ -413,8 +413,17 @@ export default function ManualInput() {
                 
                 // Handle numeric types (with slider and number input)
                 if (config.min !== undefined && config.max !== undefined) {
-                  const step = config.max > 1000 ? 100 : config.max > 100 ? 10 : config.max > 10 ? 1 : 0.01;
+                  // Use step from config if available, otherwise calculate
+                  const step = (config as any).step || (config.max > 1000 ? 100 : config.max > 100 ? 10 : config.max > 10 ? 1 : 0.01);
                   const currentValue = typeof factors[key] === 'number' ? factors[key] : (config.min || 0);
+                  
+                  // Format display value for Umsatz (show in 10k format)
+                  const formatValue = (val: number) => {
+                    if (key === 'umsatz') {
+                      return `${val} × 10k`;
+                    }
+                    return val.toString();
+                  };
                   
                   return (
                     <div key={key} className="space-y-3 pb-6 border-b border-gray-100 last:border-b-0">
@@ -454,8 +463,8 @@ export default function ManualInput() {
                         
                         {/* Range Labels */}
                         <div className="flex justify-between text-xs text-gray-500">
-                          <span>{config.min} {config.unit}</span>
-                          <span>{config.max} {config.unit}</span>
+                          <span>{formatValue(config.min)}</span>
+                          <span>{formatValue(config.max)}</span>
                         </div>
                       </div>
                     </div>

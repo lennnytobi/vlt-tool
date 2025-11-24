@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 // Gemeinsame Faktoren für alle Produkte
 const COMMON_FACTORS = {
   eigentuemer: { type: "boolean", weight: 0.10 },
-  umsatz: { min: 100000, max: 100000000, optimal: "higher", weight: 0.10 },
+  umsatz: { min: 10, max: 10000, optimal: "higher", weight: 0.10, step: 10, scale: 10000 },
   mitarbeiterzahl: { min: 1, max: 10000, optimal: "higher", weight: 0.10 },
   branche: { type: "dropdown", weight: 0.10 }
 };

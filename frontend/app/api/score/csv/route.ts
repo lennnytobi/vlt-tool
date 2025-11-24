@@ -5,7 +5,7 @@ import ExcelJS from 'exceljs';
 // Gemeinsame Faktoren für alle Produkte
 const COMMON_FACTORS = {
   eigentuemer: { type: "boolean", weight: 0.10 },
-  umsatz: { min: 100000, max: 100000000, optimal: "higher", weight: 0.10 },
+  umsatz: { min: 10, max: 10000, optimal: "higher", weight: 0.10, step: 10, scale: 10000 },
   mitarbeiterzahl: { min: 1, max: 10000, optimal: "higher", weight: 0.10 },
   branche: { type: "dropdown", weight: 0.10 }
 };
@@ -310,8 +310,12 @@ export async function POST(request: Request) {
               }
               // Handle numeric types
               else {
-                const value = parseFloat(String(rawValue));
+                let value = parseFloat(String(rawValue));
                 if (!isNaN(value)) {
+                  // Convert Umsatz from actual value to 10k units if needed
+                  if (factorName === 'umsatz' && factorConfig.scale && value >= 10000) {
+                    value = value / factorConfig.scale;
+                  }
                   factors[factorName] = value;
                 }
               }
@@ -434,8 +438,12 @@ export async function POST(request: Request) {
           }
           // Handle numeric types
           else {
-            const value = parseFloat(String(rawValue));
+            let value = parseFloat(String(rawValue));
             if (!isNaN(value)) {
+              // Convert Umsatz from actual value to 10k units if needed
+              if (factorName === 'umsatz' && factorConfig.scale && value >= 10000) {
+                value = value / factorConfig.scale;
+              }
               factors[factorName] = value;
             }
           }
